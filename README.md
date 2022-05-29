@@ -230,4 +230,4 @@ for metric beat.
 
 using ansible you will be able to run these by running:
 
-```ansible-playbook ____-playbook.yml
+```ansible-playbook ____-playbook.yml```
