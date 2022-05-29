@@ -137,25 +137,97 @@ The following screenshot displays the result of running `docker ps` after succes
 
 ### Target Machines & Beats
 This ELK server is configured to monitor the following machines:
-- _TODO: List the IP a
+- Web 1 (10.0.0.5)
+- Web 2 (10.0.0.6)
 
 We have installed the following Beats on these machines:
-- _TODO: Specify which Beats you successfully installed_
+- Filebeat
+- Metricbeat 
 
 These Beats allow us to collect the following information from each machine:
-- _TODO: In 1-2 sentences, explain what kind of data each beat collects, and provide 1 example of what you expect to see. E.g., `Winlogbeat` collects Windows logs, which we use to track user logon events, etc._
+- <i>Filebeat</i>- a log data collector that allows the recording of logs and their evolution through changes if they occur functions on the servers by monitoring log directories and files for changes and forwarding them to Elastisearch or Logstash for indexing. For example by usage of filebeat you can specify log types within the Logs UI to track activity across aggregated logs based on categories such as apps, hosts, services or data centers. 
+- <i> Metricbeat</i> allows us to collect metrics on the system-level CPU usage, memory, file system, disk IO, and network IO statistics, as well as top-like statistics for every process running on your systems. For example Metricbeat comes with internal modules that collect metrics from services like Apache, Jolokia, NGINX, MongoDB, MySQL, PostgreSQL, Prometheus, and more.
+
 
 ### Using the Playbook
-In order to use the playbook, you will need to have an Ansible control node already configured. Assuming you have such a control node provisioned: 
+In order to use the playbook, you
+will need to have an Ansible control node already configured. Assuming you have such a control node provisioned: 
 
 SSH into the control node and follow the steps below:
-- Copy the _____ file to _____.
-- Update the _____ file to include...
-- Run the playbook, and navigate to ____ to check that the installation worked as expected.
+- Copy the configuration file from your Ansible container to Web 1 and Web 2.
+- Update the /etc/ansible/hosts file to include the IP addresses of your Elk server, and Web servers.
+- Run the playbook, and navigate to http://[Elk_VM_Public_IP] to check that the installation worked as expected.
 
-_TODO: Answer the following questions to fill in the blanks:_
-- _Which file is the playbook? Where do you copy it?_
-- _Which file do you update to make Ansible run the playbook on a specific machine? How do I specify which machine to install the ELK server on versus which to install Filebeat on?_
-- _Which URL do you navigate to in order to check that the ELK server is running?
+Which file is the playbook? 
+- [filebeat-install.yml](https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/filebeat-install.yml)
+
+Where do you copy it?
+- /etc/ansible/filebeat-config.yml to /etc/filebeat/filebeat.yml
+
+Which file do you update to make Ansible run the playbook on a specific machine? How do I specify which machine to install the ELK server on versus which to install Filebeat on?
+-In order to specify the specific machine to install the Elk server on make sure the [install-elk.yml](https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/install-elk.yml) indicates the machine under:
+```bash
+- name: Configure Elk VM with Docker
+  hosts: elk
+  remote_user: azdmin
+  become: true
+  tasks:
+```
+*NOTE* Make sure the name under host: is the same within the host file: for instance, within this project specificaly three machines were created:
+2 Webservers
+1 Elk Server
+- these are indicated clearly within the hosts file 
+``` bash
+[webservers]
+10.0.0.5
+10.0.0.6
+
+[elk]
+10.1.0.4
+```
+In order to specify which machines to run filenbeat on update the [filebeat-install.yml](https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/filebeat-install.yml) and as state above make sure to indicate the group on machines in which to install filebeat:
+```bash
+- name: installing and launching filebeat
+  hosts: webservers
+  become: yes
+  tasks:
+```
+*Note*: Make sure to indicate the output for filebeat is specified within the [filebeat-config.yml](https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/filebeat-config.yml), the machines public IP address should be placed under the Elasticearch output header, under
+```bash
+  hosts: ["10.1.0.4:9200"]
+  username: "elastic"
+  password: "changeme" # TODO: Change this to the password you set
+```
+and under the Kibana header, under:
+```bash
+setup.kibana:
+  host: "10.1.0.4:5601"
+```
+
+
+Which URL do you navigate to in order to check that the ELK server is running?
+- http://[your.ELK-VM.External.IP]:5601/app/kibana
 
 _As a **Bonus**, provide the specific commands the user will need to run to download the playbook, update the files, etc._
+
+Using ``` curl ``` to avoid errors you can directly download the configuration files for filebeat and metric beat:
+
+- Run: ```curl https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/filebeat-config.yml > /etc/ansible/filebeat-config.yml
+```
+for filebeat. and:
+```curl https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/metricbeat%20config.yml > /etc/ansible/metricbeat-config.yml
+```
+for metric beat.
+
+- To decrease the chances of corruption of the information for the instllation files I would recommend downloading the yaml files within the github repository directly to your local machine and copying them out of Visual Studio to maintain the integrity of the files.
+- [elk-install](https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/install-elk.yml)
+- [filebeat-install](https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/filebeat-install.yml)
+- [metricbeat-install](https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/metric-beat.yml)
+
+-Copy these files playbooks into nano or vim files within the /etc/ansible/ directory by using this command:
+
+``` sudo nano ____-playbook.yml```
+
+using ansible you will be able to run these by running:
+
+```ansible-playbook ____-playbook.yml
