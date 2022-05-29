@@ -213,9 +213,9 @@ _As a **Bonus**, provide the specific commands the user will need to run to down
 Using ``` curl ``` to avoid errors you can directly download the configuration files for filebeat and metric beat:
 
 - Run: ```curl https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/filebeat-config.yml > /etc/ansible/filebeat-config.yml```
-for filebeat. and:
-```curl https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/metricbeat%20config.yml > /etc/ansible/metricbeat-config.yml
-```
+for filebeat
+- Run:
+```curl https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/metricbeat%20config.yml > /etc/ansible/metricbeat-config.yml```
 for metric beat.
 
 - To decrease the chances of corruption of the information for the instllation files I would recommend downloading the yaml files within the github repository directly to your local machine and copying them out of Visual Studio to maintain the integrity of the files.
