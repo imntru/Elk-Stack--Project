@@ -165,7 +165,7 @@ Where do you copy it?
 - /etc/ansible/filebeat-config.yml to /etc/filebeat/filebeat.yml
 
 Which file do you update to make Ansible run the playbook on a specific machine? How do I specify which machine to install the ELK server on versus which to install Filebeat on?
--In order to specify the specific machine to install the Elk server on make sure the [install-elk.yml](https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/install-elk.yml) indicates the machine under:
+- In order to specify the specific machine to install the Elk server on make sure the [install-elk.yml](https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/install-elk.yml) indicates the machine under:
 ```bash
 - name: Configure Elk VM with Docker
   hosts: elk
@@ -185,7 +185,7 @@ Which file do you update to make Ansible run the playbook on a specific machine?
 [elk]
 10.1.0.4
 ```
-In order to specify which machines to run filenbeat on update the [filebeat-install.yml](https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/filebeat-install.yml) and as state above make sure to indicate the group on machines in which to install filebeat:
+In order to specify which machines to run filebeat on, update the [filebeat-install.yml](https://github.com/imntru/Elk-Stack--Project/blob/main/Ansible/filebeat-install.yml) and as stated above make sure to indicate the group of machines in which to install filebeat:
 ```bash
 - name: installing and launching filebeat
   hosts: webservers
